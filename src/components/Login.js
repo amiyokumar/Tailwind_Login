@@ -14,8 +14,17 @@ export function Login(props) {
         axios.post('https://dummyjson.com/auth/login',
             { username, password })
             .then(response => {
-                // console.log(response.data.token, response.data.user);
-                login(); // Update authentication state after successful login
+                // Extract user data and token from the response
+                const userData = response.data;
+                const token = response.data.token;
+                
+                // Store user data and token in session storage
+                // sessionStorage.setItem('userData', JSON.stringify(userData));
+                // sessionStorage.setItem('token', token);
+    
+                // Update authentication state after successful login
+                login(userData, token);
+                // Navigate to the desired location
                 navigate('/');
             })
             .catch(error => {
@@ -23,6 +32,7 @@ export function Login(props) {
                 else console.log("Something went wrong. Please try again later.");
             });
     }
+    
 
     return (
         <section>

@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext'; 
 
 const Navbar = () => {
-  const { isLoggedIn, logout } = useAuth(); 
+  const { isLoggedIn, logout, userData } = useAuth(); 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
+  };
+
+  const openDropdown = () => {
+    setIsDropdownOpen(true);
+  };
+
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
   };
 
   return (
@@ -50,24 +59,31 @@ const Navbar = () => {
           </div>
           <div className="order-2 md:order-3">
             {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-gray-50 rounded-xl flex items-center gap-2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+              <div className="relative inline-block">
+                <button
+                  onMouseEnter={openDropdown}
+                  onMouseLeave={closeDropdown}
+                  className="px-4 py-2 bg-transparent hover:bg-indigo-600 text-blue-500 rounded-xl flex items-center gap-2"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Logout</span>
-              </button>
+                  <span>Welcome {userData.username}</span>
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-md z-10">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <button className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-gray-50 rounded-xl flex items-center gap-2">
                 <svg
